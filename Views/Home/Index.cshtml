@@ -18,14 +18,8 @@
                             <input type="hidden" name="userObj" value="@Json.Serialize(u)" />
                             <div class="user-thumbnail">
                                 <div class="thumbnailImage" id="thumbnail" style="background-color: @colorGen.getColor( @u.Name.ToUpper().First())">
-                                    @if (!u.Thumbnail.Equals(String.Empty))
-                                    {
-                                        <img src="@u.Thumbnail" alt="Image" />
-                                    }
-                                    else
-                                    {
-                                        @u.Name.ToUpper().First()
-                                    }
+                                    
+                                    @u.Name.ToUpper().First()
                                 </div>
                             </div>
                             <div class="username" id="username">
@@ -73,14 +67,14 @@
     <div class="row">
         <div class="col-md-12">
             <h2>Registration</h2>
-            <form id="registration-form" action="/Account/CreateUser" method="post">
-                <em>*</em><input type="text" class="form-control" name="username" placeholder="Username" required />
-                <em>*</em><input type="password" class="form-control" name="password" placeholder="Password" required />
-                <em>*</em><input type="password" class="form-control" name="passwordConfirm" placeholder="Confirm Password" required />
+            <form id="registration-form" action="/Registration/CreateUser" method="post">
+                <input type="text" class="form-control" name="username" placeholder="Username" required />
+                <input type="password" class="form-control" name="password" placeholder="Password" required />
+                <input type="password" class="form-control" name="passwordConfirm" placeholder="Confirm Password" required />
                 <input type="file" name="thumbnail" />
-                <button type="button" id="btnRecord" style="border-radius: 30px;" class="btn btn-primary"><i style="color: white;" class="fa fa-microphone fa-3x"></i></button><br />
+                <button type="button" id="btnRecord" style="border-radius: 30px;" class="btn btn-primary"><i style="color: white;" class="fa fa-microphone fa-3x"></i></button>
                 <input type="text" id="speechId" name="speechId" readonly placeholder="Record for getting an ID" />
-                <em>*</em><input type="text" class="form-control" name="email" id="email" placeholder="E-Mail" required /><br />
+                <input type="text" class="form-control" name="email" id="email" placeholder="E-Mail" required /><br />
                 @*<input type="checkbox" id="newsletter" name="newsletter" checked /><label for="newsletter">Newsletter</label><br />*@
                 <button type="button" class="btn btn-default btnBack">Cancel</button>
                 <button type="reset" class="btn btn-default">Clear</button>

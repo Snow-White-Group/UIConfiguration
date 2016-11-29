@@ -8,8 +8,7 @@ namespace UIConfiguration.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlite("Filename=../Users.db");
-            
+            optionsBuilder.UseSqlite("Filename=./Users.db");
         }
     }
 }
