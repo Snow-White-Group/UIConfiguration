@@ -9,18 +9,24 @@ using UIConfiguration.Models;
 
 namespace UIConfiguration.Controllers
 {
-    public class RegistrationController : Controller
+    public class AccountController : Controller
     {
         private static readonly ApplicationDbContext _context = new ApplicationDbContext();
 
-        [HttpPost]
-        public ActionResult Login(string username, string password)
+        public IActionResult Login(Guid id)
         {
-            if (_context.Users.FirstOrDefault(x => x.ID.Equals(username)).Password.Equals(encryptPW(password)))
+            User user = _context.Users.FirstOrDefault(x => x.ID.Equals(id));
+            return View(user);
+        }
+
+        [HttpPost]
+        public JsonResult Login(string username, string password)
+        {
+            if (_context.Users.FirstOrDefault(x => x.Name.Equals(username)).Password.Equals(encryptPW(password)))
             {
-               return RedirectToAction("Index", "Configuration");
+                return Json(1);
             }
-            return RedirectToAction("Index", "Home");
+            return Json(0);
         }
 
         [HttpPost]

@@ -15,7 +15,7 @@
                 {
                     <div class="col-md-2">
                         <div class="userbox">
-                            <input type="hidden" name="userObj" value="@Json.Serialize(u)" />
+                            <input type="hidden" id="userId" name="userId" value="@u.ID" />
                             <div class="user-thumbnail">
                                 <div class="thumbnailImage" id="thumbnail" style="background-color: @colorGen.getColor( @u.Name.ToUpper().First())">
                                     
@@ -48,7 +48,7 @@
 <!-- login -->
 <div id="user-login" class="row">
     <div class="col-md-12">
-        <form method="post" id="login-form">
+        <form method="post" action="/Account/Login" id="login-form">
             <div class="col-md-2">
                 <div class="userbox" id="login-userbox">
                 </div>
@@ -67,12 +67,12 @@
     <div class="row">
         <div class="col-md-12">
             <h2>Registration</h2>
-            <form id="registration-form" action="/Registration/CreateUser" method="post">
+            <form id="registration-form" action="/Account/CreateUser" method="post">
                 <input type="text" class="form-control" name="username" placeholder="Username" required />
-                <input type="password" class="form-control" name="password" placeholder="Password" required />
-                <input type="password" class="form-control" name="passwordConfirm" placeholder="Confirm Password" required />
+                <input type="password" class="form-control" id="reg-pw" name="password" placeholder="Password" required />
+                <input type="password" class="form-control" id="reg-pwConfirm" name="passwordConfirm" placeholder="Confirm Password" required />
                 <input type="file" name="thumbnail" />
-                <button type="button" id="btnRecord" style="border-radius: 30px;" class="btn btn-primary"><i style="color: white;" class="fa fa-microphone fa-3x"></i></button>
+                <span id="btnRecord" style="border-radius: 30px;"><i style="color: white;" class="fa fa-microphone fa-3x"></i></button>
                 <input type="text" id="speechId" name="speechId" readonly placeholder="Record for getting an ID" />
                 <input type="text" class="form-control" name="email" id="email" placeholder="E-Mail" required /><br />
                 @*<input type="checkbox" id="newsletter" name="newsletter" checked /><label for="newsletter">Newsletter</label><br />*@
@@ -89,13 +89,17 @@
         $(document).ready(function () {
             $("#user-login").hide();
             $("#user-registration").hide();
-                    });
+        });
 
         $(".userbox").on("click", function () {
-            $("#login-userbox").html($(this).html());
+            /*$("#login-userbox").html($(this).html());
             $("#user-login").toggle();
-            $("#user-selection").toggle();
-                    });
+            $("#user-selection").toggle();*/
+            var userid = $("#userId").val();
+            var url = '@Url.Action("Login", "Account", new { id = "userid"})';
+            url = url.replace("userid", userid);
+            window.location.href = url;
+        });
 
         $(".btnBack").on("click", function () {
             // leert alle inputs
@@ -103,47 +107,55 @@
             $("#user-login").hide();
             $("#user-selection").show();
             $("#user-registration").hide();
-                    });
+        });
 
         $("#registration-box").on("click", function () {
             $("#user-login").hide();
             $("#user-selection").hide();
             $("#user-registration").show();
-                    });
+        });
 
         $("#btnRecord").on("click", function () {
-                        var recordClass = "record-active";
-                        if ($("#btnRecord").hasClass(recordClass)) {
+            var recordClass = "record-active";
+            if ($("#btnRecord").hasClass(recordClass)) {
                 $("#btnRecord").removeClass(recordClass);
-                        } else {
+            } else {
                 $("#btnRecord").addClass(recordClass);
-                        }
-                    });
+            }
+        });
 
         $("#login-form").submit(function(e) {
-                        var url = "@Url.Action("Login", "Account")";
+            var url = '@Url.Action("Login", "Account")';
 
             $.ajax({
-                            type: "POST",
+                type: "POST",
                 url: url,
                 data: $("#login-form").serialize(),
                 success: function (data) {
-                                alert(data);
-                            }
-                        });
-                        e.preventDefault();
-                    });
+                    if(data == "1"){
+                        window.location.href = '@Url.Action("Index", "Configuration")';
+                    } else {
+                        alert("Error: Bad Login");
+                    }
+                }
+            });
+            e.preventDefault();
+        });
 
         $("#registration-form").submit(function (e) {
-            var f = $("#registration-form");
-            var url = f.attr("action");
-            var formData = f.serialize();
-            console.log(formData);
-            $.post(url, formData, function (data) {
-                console.log(data);
-            });
+            if($("#reg-pw").text() == $("#reg-pwConfirm").text()){
+                var f = $("#registration-form");
+                var url = f.attr("action");
+                var formData = f.serialize();
+                $.post(url, formData, function (data) {
+                });
 
-            return false;
+                return false;
+                e.preventDefault();
+            } else {
+                alert("Check your password!");
+                return false;
+            }
             e.preventDefault();
         });
     </script>
