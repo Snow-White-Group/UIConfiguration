@@ -53,7 +53,7 @@ namespace UIConfiguration
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationScheme = "Cookie",
-                LoginPath = new PathString("/Home/Index/"),
+                LoginPath = new PathString("/Account/Login/"),
                 AccessDeniedPath = new PathString("/Home/Error/"),
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true

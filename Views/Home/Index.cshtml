@@ -14,8 +14,8 @@
                 @foreach (User u in Model)
                 {
                     <div class="col-md-2">
-                        <div class="userbox">
-                            <input type="hidden" id="userId" name="userId" value="@u.ID" />
+                        <div class="userlist userbox">
+                            <input type="hidden" name="userId" value="@u.ID" />
                             <div class="user-thumbnail">
                                 <div class="thumbnailImage" id="thumbnail" style="background-color: @colorGen.getColor( @u.Name.ToUpper().First())">
                                     
@@ -29,7 +29,7 @@
                     </div>
                 }
                 <div class="col-md-2">
-                    <div class="userbox" id="registration-box">
+                    <div class="userlist userbox" id="registration-box">
                         <div class="user-thumbnail">
                             <div class="thumbnailImage" id="thumbnail" style="color: #fff">
                                 <span><i class="fa fa-plus"></i></span>
@@ -45,118 +45,22 @@
     </div>
 </div>
 
-<!-- login -->
-<div id="user-login" class="row">
-    <div class="col-md-12">
-        <form method="post" action="/Account/Login" id="login-form">
-            <div class="col-md-2">
-                <div class="userbox" id="login-userbox">
-                </div>
-            </div>
-            <div class="col-md-10 form-group">
-                <input type="password" name="password" class="form-control" placeholder="Password" required />
-                <button type="button" class="btn btn-default btnBack">Cancel</button>
-                <input type="submit" class="btn btn-primary">Login</input>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- registration -->
-<div id="user-registration">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Registration</h2>
-            <form id="registration-form" action="/Account/CreateUser" method="post">
-                <input type="text" class="form-control" name="username" placeholder="Username" required />
-                <input type="password" class="form-control" id="reg-pw" name="password" placeholder="Password" required />
-                <input type="password" class="form-control" id="reg-pwConfirm" name="passwordConfirm" placeholder="Confirm Password" required />
-                <input type="file" name="thumbnail" />
-                <span id="btnRecord" style="border-radius: 30px;"><i style="color: white;" class="fa fa-microphone fa-3x"></i></button>
-                <input type="text" id="speechId" name="speechId" readonly placeholder="Record for getting an ID" />
-                <input type="text" class="form-control" name="email" id="email" placeholder="E-Mail" required /><br />
-                @*<input type="checkbox" id="newsletter" name="newsletter" checked /><label for="newsletter">Newsletter</label><br />*@
-                <button type="button" class="btn btn-default btnBack">Cancel</button>
-                <button type="reset" class="btn btn-default">Clear</button>
-                <input type="submit" id="register-submit" class="btn btn-primary" value="Register"/>
-            </form>
-        </div>
-    </div>
-</div>
-<!---->
 @section Scripts{
     <script>
         $(document).ready(function () {
-            $("#user-login").hide();
-            $("#user-registration").hide();
         });
 
         $(".userbox").on("click", function () {
-            /*$("#login-userbox").html($(this).html());
-            $("#user-login").toggle();
-            $("#user-selection").toggle();*/
-            var userid = $("#userId").val();
+            var userid = $(this).children().closest("input").val();
             var url = '@Url.Action("Login", "Account", new { id = "userid"})';
             url = url.replace("userid", userid);
             window.location.href = url;
         });
 
-        $(".btnBack").on("click", function () {
-            // leert alle inputs
-            //$("input").val("");
-            $("#user-login").hide();
-            $("#user-selection").show();
-            $("#user-registration").hide();
-        });
-
         $("#registration-box").on("click", function () {
-            $("#user-login").hide();
-            $("#user-selection").hide();
-            $("#user-registration").show();
-        });
+            var url = '@Url.Action("Registration", "Account")';
+            window.location.href = url;
 
-        $("#btnRecord").on("click", function () {
-            var recordClass = "record-active";
-            if ($("#btnRecord").hasClass(recordClass)) {
-                $("#btnRecord").removeClass(recordClass);
-            } else {
-                $("#btnRecord").addClass(recordClass);
-            }
-        });
-
-        $("#login-form").submit(function(e) {
-            var url = '@Url.Action("Login", "Account")';
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: $("#login-form").serialize(),
-                success: function (data) {
-                    if(data == "1"){
-                        window.location.href = '@Url.Action("Index", "Configuration")';
-                    } else {
-                        alert("Error: Bad Login");
-                    }
-                }
-            });
-            e.preventDefault();
-        });
-
-        $("#registration-form").submit(function (e) {
-            if($("#reg-pw").text() == $("#reg-pwConfirm").text()){
-                var f = $("#registration-form");
-                var url = f.attr("action");
-                var formData = f.serialize();
-                $.post(url, formData, function (data) {
-                });
-
-                return false;
-                e.preventDefault();
-            } else {
-                alert("Check your password!");
-                return false;
-            }
-            e.preventDefault();
         });
     </script>
 }

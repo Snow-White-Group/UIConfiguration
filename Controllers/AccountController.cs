@@ -29,14 +29,19 @@ namespace UIConfiguration.Controllers
             return Json(0);
         }
 
+        public IActionResult Registration()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public JsonResult CreateUser(string username, string password, string passwordConfirm, string email, bool newsletter)
+        public JsonResult Registration(string username, string password, string passwordConfirm, string email, bool newsletter)
         {
             string securePW = encryptPW(password);
 
             if (_context.Users.Any(x => x.Name.Equals(username)))
             {
-                return Json("Name exists already");
+                return Json(1);
             }
 
             User user = new User()

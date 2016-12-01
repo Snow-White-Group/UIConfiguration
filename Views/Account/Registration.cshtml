@@ -1,0 +1,58 @@
+@{
+    ViewBag.Title = "Registration";
+}
+<div id="user-registration">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Registration</h2>
+            <form id="registration-form" action="/Account/Registration" method="post">
+                <input type="text" class="form-control" name="username" placeholder="Username" required />
+                <input type="password" class="form-control" id="reg-pw" name="password" placeholder="Password" required />
+                <input type="password" class="form-control" id="reg-pwConfirm" name="passwordConfirm" placeholder="Confirm Password" required />
+                <input type="file" name="thumbnail" />
+                <span id="btnRecord" style="border-radius: 30px;"><i style="color: white;" class="fa fa-microphone fa-3x"></i></button>
+                <input type="text" id="speechId" name="speechId" readonly placeholder="Record for getting an ID" />
+                <input type="text" class="form-control" name="email" id="email" placeholder="E-Mail" required /><br />
+                @*<input type="checkbox" id="newsletter" name="newsletter" checked /><label for="newsletter">Newsletter</label><br />*@                
+                <button type="reset" class="btn btn-default">Clear</button>
+                <input type="submit" id="register-submit" class="btn btn-primary" value="Register"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $("#btnRecord").on("click", function () {
+            var recordClass = "record-active";
+            if ($("#btnRecord").hasClass(recordClass)) {
+                $("#btnRecord").removeClass(recordClass);
+            } else {
+                $("#btnRecord").addClass(recordClass);
+            }
+        });
+        
+        $("#registration-form").submit(function (e) {
+            if($("#reg-pw").text() == $("#reg-pwConfirm").text()){
+                var f = $("#registration-form");
+                var url = f.attr("action");
+                var formData = f.serialize();
+                $.post(url, formData, function (data) {
+                    if(data == "0"){
+                        var url = '@Url.Action("Index", "Home")';
+                        window.location.href = url;
+                    } else {
+                        alert("failed");
+                    }
+                });
+
+                return false;
+                e.preventDefault();
+            } else {
+                alert("Check your password!");
+                return false;
+            }
+            e.preventDefault();
+        });
+    </script>
+}

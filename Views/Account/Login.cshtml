@@ -2,6 +2,7 @@
 @using UIConfiguration.Utils
 @model User
 @{
+    ViewBag.Title = "Login";
     ColorGenerator colorGen = new ColorGenerator();
 }
 
@@ -11,21 +12,43 @@
             <div class="col-md-2">
                 <div class="userbox">
                     <div class="user-thumbnail">
-                        <div class="thumbnailImage" id="thumbnail" style="background-color: @colorGen.getColor(@Model.Name.ToUpper().First())">
+                        <div class="thumbnailImage" id="thumbnail" style="background-color: @colorGen.getColor(Model.Name.ToUpper().First())">
                             
                             @Model.Name.ToUpper().First()
                         </div>
-                    </div>
+                    </div>                    
                     <div class="username" id="username">
+                        <input type="hidden" name="username" value="@Model.Name"/>
                         @Model.Name
                     </div>
                 </div>
             </div>
             <div class="col-md-10 form-group">
                 <input type="password" name="password" class="form-control" placeholder="Password" required />
-                <button type="button" class="btn btn-default btnBack">Cancel</button>
-                <input type="submit" class="btn btn-primary">Login</input>
+                <input type="submit" class="btn btn-primary" value="Log in"/>
             </div>
         </form>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        $("#login-form").submit(function(e) {
+            var url = '@Url.Action("Login", "Account")';
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $("#login-form").serialize(),
+                success: function (data) {
+                    if(data == "1"){
+                        window.location.href = '@Url.Action("Index", "Configuration")';
+                    } else {
+                        alert("Error: Bad Login");
+                    }
+                }
+            });
+            e.preventDefault();
+        });
+    </script>
+}
