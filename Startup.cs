@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace UIConfiguration
 {
@@ -31,7 +32,13 @@ namespace UIConfiguration
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthorization();
-            services.AddMvc();
+            services.AddMvc(config => 
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,8 +60,9 @@ namespace UIConfiguration
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationScheme = "Cookie",
-                LoginPath = new PathString("/Account/Login/"),
-                AccessDeniedPath = new PathString("/Home/Error/"),
+                LoginPath = new PathString("/Home/Index/"),
+                LogoutPath = new PathString("/Account/SignOut"),
+                AccessDeniedPath = new PathString("/Account/Unauthorized/"),
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
             });

@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UIConfiguration.Models;
 
 namespace UIConfiguration.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private static readonly ApplicationDbContext _context = new ApplicationDbContext();

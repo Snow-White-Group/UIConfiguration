@@ -1,14 +1,18 @@
 using System;
 using System.Linq;
 using System.Net.Sockets;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using UIConfiguration.Models;
 
 namespace UIConfiguration.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private static readonly ApplicationDbContext _context = new ApplicationDbContext();
@@ -20,10 +24,19 @@ namespace UIConfiguration.Controllers
         }
 
         [HttpPost]
-        public JsonResult Login(string username, string password)
+        public JsonResult Login(Guid id, string username, string password)
         {
-            if (_context.Users.FirstOrDefault(x => x.Name.Equals(username)).Password.Equals(encryptPW(password)))
+            User user = _context.Users.FirstOrDefault(x => x.ID.Equals(id));
+            if (user != null && user.Password.Equals(encryptPW(password)))
             {
+                Claim claim = new Claim(ClaimTypes.Name,"" + user.ID);
+                var userIdentity = new ClaimsIdentity("SecureLogin");
+                userIdentity.AddClaim(claim);
+                HttpContext.Authentication.SignInAsync("Cookie", new ClaimsPrincipal(userIdentity),new AuthenticationProperties(){
+                    ExpiresUtc = DateTime.UtcNow.AddMinutes(10),
+                    IsPersistent = false,
+                    AllowRefresh = true
+                });
                 return Json(1);
             }
             return Json(0);
@@ -65,6 +78,16 @@ namespace UIConfiguration.Controllers
         //     var response = await client.ReceiveAsync(SocketAsyncEventArgs);
         //     return Json(response);
         // }
+
+        public IActionResult Unauthorized()
+        {
+            return View();
+        }
+
+        public IActionResult SignOff()
+        {
+            return View();
+        }
 
         private string encryptPW(string password)
         {
