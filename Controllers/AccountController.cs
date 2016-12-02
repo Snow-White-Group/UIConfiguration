@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -72,9 +74,12 @@ namespace UIConfiguration.Controllers
             return Json(0);
         }
 
-        // public async Task<JsonResult> StartRecord()
+        // public async Task<JsonResult> StartRecord(string name)
         // {
-        //     Socket client = new Socket();
+        //     var client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        //     client.Connect(serverAddress)
+        //     byte[] toSendBytes = System.Text.Encoding.ASCII.GetBytes(name);
+        //     client.Send(toSendBytes);
         //     var response = await client.ReceiveAsync(SocketAsyncEventArgs);
         //     return Json(response);
         // }
@@ -84,8 +89,9 @@ namespace UIConfiguration.Controllers
             return View();
         }
 
-        public IActionResult SignOff()
+        public async Task<IActionResult> SignOff()
         {
+            await HttpContext.Authentication.SignOutAsync("Cookie");
             return View();
         }
 

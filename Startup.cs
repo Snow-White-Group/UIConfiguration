@@ -57,11 +57,10 @@ namespace UIConfiguration
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {
                 AuthenticationScheme = "Cookie",
                 LoginPath = new PathString("/Home/Index/"),
-                LogoutPath = new PathString("/Account/SignOut"),
                 AccessDeniedPath = new PathString("/Account/Unauthorized/"),
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
