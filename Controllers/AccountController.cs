@@ -84,11 +84,6 @@ namespace UIConfiguration.Controllers
         //     return Json(response);
         // }
 
-        public IActionResult Unauthorized()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> SignOff()
         {
             await HttpContext.Authentication.SignOutAsync("Cookie");

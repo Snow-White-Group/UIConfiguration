@@ -27,14 +27,20 @@
       "version": "1.0.1",
       "type": "build"
     },
-    "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0"
+    "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
+    "dotnet-test-mstest": "1.0.1-preview",
+    "MSTest.TestFramework": "1.0.0-preview",
+    "Microsoft.AspNetCore.Hosting": "1.1.0",
+		"Microsoft.AspNetCore.WebSockets.Server" : "0.1.0-*"
   },
+  "testRunner": "mstest",
 
   "tools": {
     "BundlerMinifier.Core": "2.2.306",
     "Microsoft.AspNetCore.Razor.Tools": "1.1.0-preview4-final",
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.1.0-preview4-final",
-    "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.1.0-preview4"
+    "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.1.0-preview4",
+    "SpecFlow.NetCore": "1.0.0-*"
   },
 
   "frameworks": {
@@ -67,7 +73,7 @@
   },
 
   "scripts": {
-    "precompile": [ "dotnet bundle" ],
+    "precompile": [ "dotnet bundle", "dotnet SpecFlow.NetCore" ],
     "prepublish": [ "bower install" ],
     "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
   },

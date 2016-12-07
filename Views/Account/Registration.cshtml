@@ -2,34 +2,59 @@
     ViewBag.Title = "Registration";
 }
 <div id="user-registration">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Registration</h2>
-            <form id="registration-form" action="/Account/Registration" method="post">
-                <input type="text" class="form-control" name="username" placeholder="Username" required />
-                <input type="password" class="form-control" id="reg-pw" name="password" placeholder="Password" required />
-                <input type="password" class="form-control" id="reg-pwConfirm" name="passwordConfirm" placeholder="Confirm Password" required />
-                <input type="file" name="thumbnail" />
-                <span id="btnRecord" style="border-radius: 30px;"><i style="color: white;" class="fa fa-microphone fa-3x"></i></button>
-                <input type="text" id="speechId" name="speechId" readonly placeholder="Record for getting an ID" />
-                <input type="text" class="form-control" name="email" id="email" placeholder="E-Mail" required /><br />
-                @*<input type="checkbox" id="newsletter" name="newsletter" checked /><label for="newsletter">Newsletter</label><br />*@                
-                <button type="reset" class="btn btn-default">Clear</button>
-                <input type="submit" id="register-submit" class="btn btn-primary" value="Register"/>
-            </form>
-        </div>
-    </div>
+    <h2>Registration</h2>
+    <form id="registration-form" action="/Account/Registration" method="post">
+        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required />
+        <input type="password" class="form-control" id="reg-pw" name="password" placeholder="Password" required />
+        <input type="password" class="form-control" id="reg-pwConfirm" name="passwordConfirm" placeholder="Confirm Password" required />
+        <input type="file" name="thumbnail" />
+        <span id="btnRecord" style="border-radius: 30px;"><i style="color: white;" class="fa fa-microphone fa-3x"></i></span>
+        <input type="hidden" id="speechId" name="speechId" />
+        <input type="text" class="form-control" name="email" id="email" placeholder="E-Mail" required /><br />
+        <input type="checkbox" id="newsletter" name="newsletter" checked /><label for="newsletter">Newsletter</label><br />                
+        <button type="reset" class="btn btn-default">Clear</button>
+        <input type="submit" id="register-submit" class="btn btn-primary" value="Register"/>
+    </form>
 </div>
 
 @section Scripts{
     <script>
-        $("#btnRecord").on("click", function () {
-            var recordClass = "record-active";
-            if ($("#btnRecord").hasClass(recordClass)) {
-                $("#btnRecord").removeClass(recordClass);
-            } else {
-                $("#btnRecord").addClass(recordClass);
-            }
+        $(document).ready(function () {
+            var webSocket = new WebSocket("ws://localhost:5000");
+            /*webSocket.onopen = function () {
+                alert("connected");
+            };
+            webSocket.onmessage = function (evt) {
+                $("#speechId").text(evt.data);
+            };
+            webSocket.onerror = function (evt) {
+                alert(evt.message);
+            };
+            webSocket.onclose = function () {
+                
+            };*/
+
+            $("#btnRecord").on("click", function () {
+                var name = $("#username").val();
+                if(name == ""){
+                    alert("No username given!");
+                } else {
+                    console.log(webSocket);
+                    if (webSocket.readyState == WebSocket.OPEN) {
+                        webSocket.send(name);
+                    }
+                    else {
+                        alert("Connection is closed");
+                    }
+
+                    var recordClass = "record-active";
+                    if ($("#btnRecord").hasClass(recordClass)) {
+                        $("#btnRecord").removeClass(recordClass);
+                    } else {
+                        $("#btnRecord").addClass(recordClass);
+                    }
+                }
+            });
         });
         
         $("#registration-form").submit(function (e) {
