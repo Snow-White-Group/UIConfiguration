@@ -53,7 +53,7 @@
                                 }
                             }
                         }
-                        webSocket.send(recordObj);
+                        webSocket.send(JSON.stringify(recordObj));
                     }
                     else {
                         alert("Connection is closed");
