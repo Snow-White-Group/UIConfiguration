@@ -47,10 +47,10 @@
                             id:Math.random().toString().substring(7),
                             command:{
                                 task:"create",
-                                taskoptions:{
+                                taskoptions:[
                                     option:"1",
                                     optionValue:name
-                                }
+                                ]
                             }
                         }
                         webSocket.send(JSON.stringify(recordObj));
