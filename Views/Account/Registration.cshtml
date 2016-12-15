@@ -20,28 +20,39 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            var webSocket = new WebSocket("ws://localhost:5000");
-            /*webSocket.onopen = function () {
+            var webSocket = new WebSocket("ws://localhost:4343");
+            webSocket.onopen = function () {
                 alert("connected");
             };
             webSocket.onmessage = function (evt) {
-                $("#speechId").text(evt.data);
+                $("#speechId").text(evt.data["result"]["task-options"]["optionValue"]);
             };
             webSocket.onerror = function (evt) {
                 alert(evt.message);
             };
             webSocket.onclose = function () {
                 
-            };*/
+            };
 
             $("#btnRecord").on("click", function () {
                 var name = $("#username").val();
                 if(name == ""){
                     alert("No username given!");
                 } else {
-                    console.log(webSocket);
                     if (webSocket.readyState == WebSocket.OPEN) {
-                        webSocket.send(name);
+                        var recordObj = {
+                            version:"1.0",
+                            source:"mirrorCP",
+                            id:Math.random().toString().subString(7),
+                            command:{
+                                task:"create",
+                                task-options:{
+                                    option:"1",
+                                    optionValue:name
+                                }
+                            }
+                        }
+                        webSocket.send(recordObj);
                     }
                     else {
                         alert("Connection is closed");
