@@ -25,7 +25,8 @@
                 alert("connected");
             };
             webSocket.onmessage = function (evt) {
-                $("#speechId").text(evt.data["result"]["task-options"]["optionValue"]);
+                alert(evt.data);
+                //$("#speechId").text(evt.data["result"]["task-options"]["optionValue"]);
             };
             webSocket.onerror = function (evt) {
                 alert(evt.message);
@@ -43,10 +44,10 @@
                         var recordObj = {
                             version:"1.0",
                             source:"mirrorCP",
-                            id:Math.random().toString().subString(7),
+                            id:Math.random().toString().substring(7),
                             command:{
                                 task:"create",
-                                task-options:{
+                                taskoptions:{
                                     option:"1",
                                     optionValue:name
                                 }
